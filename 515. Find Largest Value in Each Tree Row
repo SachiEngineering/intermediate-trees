@@ -1,0 +1,39 @@
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def largestValues(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+
+        queue = [root]
+        result = []
+
+        while queue:
+            level_size = len(queue)
+            current_level = []
+            currMax = float("-inf")
+
+            #for each node in this level
+            for i in range(level_size):
+                current_node = queue.pop(0)
+
+                #if current node value is greater than the max so far, make it the current max
+                currMax = max(currMax, current_node.val)
+
+                if current_node.left:
+                    queue.append(current_node.left)
+                if current_node.right:
+                    queue.append(current_node.right)
+
+                if i == level_size -1:
+                    result.append(currMax)
+
+        return result
