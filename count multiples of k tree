@@ -1,0 +1,28 @@
+class Node:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+        
+def countMultiplesOfKTree(root, k):
+    if not root:
+        return 0
+
+    result = 0
+
+    def dfs(node, k):
+        nonlocal result
+        if not node:
+            return
+        if node.value % k == 0:
+            result += 1
+
+        dfs(node.left, k)
+        dfs(node.right, k)
+
+    dfs(root, k)
+
+    return result
+
+trial = Node(1,Node(3, Node(3), Node(6)), Node(2,Node(7),Node(12)))
+print(countMultiplesOfKTree(trial, 3))
