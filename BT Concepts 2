@@ -1,0 +1,253 @@
+class Node:
+    def __init__(self, value, left = None, right = None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+# 1. Given a binary tree and a target k, return any values in the tree that is repeated exactly k times. If multiple values are repeated k times, return the smaller value. If there isn't any value repeated k times, return -1.
+# Examples
+
+# Input:
+# tree:
+#           1 
+#         /    \
+#       2       2
+#      / \      / \
+#    3   4   4   3
+
+# k: 2
+# Output: 2
+# Function Signature
+
+def findRepeatedKTimesTree(root, k):
+    if not root:
+        return -1
+
+    freq = {}
+    def dfs(node):
+        if not node:
+            return
+        if node.value in freq:
+            freq[node.value] += 1
+        else:
+            freq[node.value] = 1
+        dfs(node.left)
+        dfs(node.right)
+    dfs(root)
+
+    result = -1
+    # Find the smallest value with exactly k occurrences
+    for value, count in freq.items():
+        if count == k: 
+            if result == -1 or value < result:
+                result = value
+
+    return result
+
+trial = Node(1, Node(2, Node(3), Node(4)), Node(2, Node(4), Node(3)))
+print(findRepeatedKTimesTree(trial, 2))
+
+#################################################
+# 2. Given a binary tree and a target k, count the number of nodes that has a value less than k.
+# Examples
+
+# Input:
+# tree:
+#           1 
+#         /    \
+#       7       2
+#      / \      / \
+#    3   6   5   3
+# k: 4
+# Output: 4
+# Function Signature
+
+def countNodesLessThanKTree(root, target):
+    if not root:
+        return 0
+
+    count = 0
+    def dfs(node):
+        nonlocal count
+        if not node:
+            return
+        
+        if node.value < target:
+            count += 1
+
+        dfs(node.left)
+        dfs(node.right)
+
+    dfs(root)
+
+    return count
+
+trial = Node(1, Node(7, Node(3), Node(6)), Node(2, Node(5), Node(3)))
+print(countNodesLessThanKTree(trial, 4))
+
+
+#################################################
+# 3. Given a binary tree, count the number of leaf nodes.
+# Examples
+
+# Input:
+#           1 
+#         /    \
+#       2       2
+#      / \      / \
+#    3   4   4   3
+# Output: 4 (3, 4, 4, 3 are leaf nodes)
+# Function Signature
+
+def countLeafNodes(root):
+
+    count = 0
+    def dfs(node):
+        nonlocal count
+        if not node:
+            return
+        
+        if not node.left and not node.right: #if a leaf
+            count += 1
+
+        dfs(node.left)
+        dfs(node.right)
+
+    dfs(root)
+
+    return count
+
+trial = Node(1, Node(2, Node(3), Node(4)), Node(2, Node(4),Node(3)))
+print(countLeafNodes(trial))
+
+#################################################
+# 4. Construct a right child only tree from a given array.
+# Examples
+
+# Input: [1, 2, 3]
+# Output: 
+#           1
+#             \
+#               2
+#                 \
+#                  3
+# Function Signature
+
+def buildRightChildOnlyTree(array):
+    if not root:
+        return None
+
+    head = Node(array[0])
+    curr = head
+
+    for i in range(1, len(array)):
+        curr.right = Node(array[i])
+        curr = curr.right
+
+    return head
+
+#################################################
+# 5. Construct a zigzag tree from an array (alternating right and left child), starting with right.
+# Examples
+
+# Input: [1, 2, 3, 4, 5]
+# Output:
+#           1
+#             \
+#               2
+#              /
+#           3
+#             \
+#               4
+#              /
+#           5
+# Function Signature
+
+def buildZigZagTree(array):
+    if not array:
+        return None
+    
+    head = Node(array[0])
+    curr = head
+
+    for i in range(1, len(array)):
+        if i % 2: #if i is odd:
+            curr.right = Node(array[i])
+            curr = curr.right
+        else:
+            curr.left = Node(array[i])
+            curr = curr.left
+
+    return head
+
+# # __________________________________________________
+from collections import deque
+
+def print_level_order(root: Node):
+    if not root:
+        return
+    
+    queue = deque([root])
+    
+    while queue:
+        level_size = len(queue)
+        
+        for i in range(level_size):
+            node = queue.popleft()
+            print(node.value, end=" ")
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        
+        print()
+
+
+trial = [1, 2, 3, 4, 5]
+print_level_order(buildZigZagTree(trial))
+
+
+#################################################
+# 6. Given a binary tree, return the values of the nodes when facing the tree from the right side (from top to bottom).
+# Examples
+
+#    1              ←
+#  /   \
+# 2     5          ←
+#  \
+#   7               ←
+# Output: [1, 5, 7]
+# Function Signature
+
+def rightSideView(root: Node) -> list[int]:
+    if not root:
+        return []
+
+    queue = [root]
+    rhs = []
+
+    while queue:
+        levelSize = len(queue)
+        
+        for i in range(levelSize): #for each node in this level
+            curr = queue.pop(0)
+            if i == (levelSize - 1):
+                rhs.append(curr.value)
+
+            if curr.left:
+                queue.append(curr.left)
+
+            if curr.right:
+                queue.append(curr.right)
+
+    return rhs
+
+trial = Node(1, Node(2, None, Node(7)), Node(5))
+print(rightSideView(trial))
+
+#################################################
+
+
+
+
